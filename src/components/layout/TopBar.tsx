@@ -1,20 +1,29 @@
 "use client";
 
-import React from "react";
-import { Bell, Search, ChevronDown, UserCircle } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Bell, Search, ChevronDown, UserCircle, LogOut } from "lucide-react";
 
 export default function TopBar() {
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const profileRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+                setIsProfileOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
         <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200/60 flex items-center justify-between px-8 sticky top-0 z-40 transition-all w-full">
-            {/* Left: User Welcome */}
-            <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100 shadow-sm">
-                    <span className="font-bold text-sm">CS</span>
-                </div>
-                <div className="flex flex-col">
-                    <h2 className="text-sm font-bold text-slate-800 leading-tight">Welcome back, CSR</h2>
-                    <p className="text-xs text-slate-500 font-medium">Insurance CRM Dashboard</p>
-                </div>
+            {/* Left: Spacer (was User Welcome) */}
+            <div className="flex items-center gap-3 w-10">
+                {/* Empty spacer to maintain flex alignment if needed, or just let it shrink */}
             </div>
 
             {/* Center: Search */}
@@ -43,14 +52,40 @@ export default function TopBar() {
 
                 <div className="h-8 w-px bg-slate-200/80 mx-1" />
 
-                <button className="flex items-center gap-3 pl-2 pr-1 py-1.5 rounded-full hover:bg-slate-50 transition-all duration-300 cursor-pointer border border-transparent hover:border-slate-100/50">
-                    <div className="text-right hidden md:block">
-                        <p className="text-sm font-semibold text-slate-700">John Doe</p>
-                        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wide">Senior Agent</p>
-                    </div>
-                    <UserCircle className="w-9 h-9 text-slate-300" />
-                    <ChevronDown className="w-4 h-4 text-slate-400" />
-                </button>
+                <div className="relative" ref={profileRef}>
+                    <button
+                        onClick={() => setIsProfileOpen(!isProfileOpen)}
+                        className="flex items-center gap-3 pl-2 pr-1 py-1.5 rounded-full hover:bg-slate-50 transition-all duration-300 cursor-pointer border border-transparent hover:border-slate-100/50"
+                    >
+                        <div className="text-right hidden md:block">
+                            <p className="text-sm font-semibold text-slate-700">John Doe</p>
+                            <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wide">CSR</p>
+                        </div>
+                        <UserCircle className="w-9 h-9 text-slate-300" />
+                        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {isProfileOpen && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-200 py-1 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                            <div className="px-4 py-2 border-b border-slate-100 md:hidden">
+                                <p className="text-sm font-semibold text-slate-700">John Doe</p>
+                                <p className="text-[10px] font-medium text-slate-400">CSR</p>
+                            </div>
+                            <button
+                                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-rose-600 hover:bg-rose-50 transition-colors hover:cursor-pointer"
+                                onClick={() => {
+                                    // Handle logout logic here
+                                    console.log("Logout clicked");
+                                    setIsProfileOpen(false);
+                                }}
+                            >
+                                <LogOut className="w-4 h-4 hover:cursor-pointer" />
+                                <span>Sign out</span>
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </header>
     );

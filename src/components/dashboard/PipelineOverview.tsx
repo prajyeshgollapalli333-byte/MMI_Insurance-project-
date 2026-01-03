@@ -4,7 +4,7 @@ import React from "react";
 import { Send, FileCheck, FileText, CheckCircle2 } from "lucide-react";
 
 const STATS = [
-    { label: "Forms Sent", value: "124", icon: Send, color: "text-blue-600", bg: "bg-blue-50" },
+    { label: "Forms Sent", value: "1000", icon: Send, color: "text-blue-600", bg: "bg-blue-50" },
     { label: "Opened", value: "89", icon: FileText, color: "text-amber-600", bg: "bg-amber-50" },
     { label: "Completed", value: "62", icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" },
     { label: "Docs Uploaded", value: "45", icon: FileCheck, color: "text-purple-600", bg: "bg-purple-50" },

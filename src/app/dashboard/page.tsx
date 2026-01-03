@@ -9,27 +9,39 @@ import RecentInteractions from "@/components/dashboard/RecentInteractions";
 import AddNewClient from "@/components/dashboard/AddNewClient";
 
 export default function DashboardPage() {
-    const [currentView, setCurrentView] = useState<"dashboard" | "add-client">("dashboard");
+    const [currentView, setCurrentView] = useState<"dashboard" | "add-client" | "interactions">("dashboard");
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
-            <Sidebar />
+            <Sidebar onNavigate={(view) => setCurrentView(view as any)} currentView={currentView} />
 
             {/* Main Content Wrapper */}
-            <div className="pl-64 flex flex-col min-h-screen">
+            <div className="pl-20 flex flex-col min-h-screen transition-all duration-300">
                 <TopBar />
 
                 <main className="flex-1 p-8 max-w-7xl mx-auto w-full">
                     {currentView === "dashboard" ? (
                         <div className="space-y-8 animate-in fade-in duration-500">
-                            {/* Top Row: Pipeline & Actions */}
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                <PipelineOverview />
+                            {/* Dashboard Content */}
+                            <div className="grid grid-cols-1 gap-8">
                                 <QuickActions onNewClient={() => setCurrentView("add-client")} />
                             </div>
-
-                            {/* Bottom Row: Interactions */}
-                            <div className="h-96">
+                        </div>
+                    ) : currentView === "interactions" ? (
+                        <div className="animate-in fade-in duration-500 space-y-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-slate-800">Interactions</h2>
+                                    <p className="text-slate-500 mt-1">Recent client communications and logs</p>
+                                </div>
+                                <button
+                                    onClick={() => setCurrentView("dashboard")}
+                                    className="text-sm text-slate-500 hover:text-indigo-600 font-medium hover:underline cursor-pointer"
+                                >
+                                    Back to Dashboard
+                                </button>
+                            </div>
+                            <div className="bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden">
                                 <RecentInteractions />
                             </div>
                         </div>
